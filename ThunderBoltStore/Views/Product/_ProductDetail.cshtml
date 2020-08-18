@@ -1,0 +1,94 @@
+﻿@model Product
+@inject ThunderBoltStore.Interfaces.ISuppliersRepository suppliers
+
+@Html.HiddenFor(x => x.ProductID)
+@Html.HiddenFor(x => x.CategoryID)
+
+@if (Model.IsNew)
+{
+    var supplierList = await suppliers.GetAllSuppliers();
+    <div class="form-row">
+        <div class="col">
+            @Html.LabelFor(x => x.Name)
+        </div>
+        <div class="col">
+            @Html.TextBoxFor(x => x.Name, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Name, "", new { @Class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            @Html.LabelFor(x => x.Supplier)
+        </div>
+        <div class="col">
+            @Html.DropDownListFor(x => x.SupplierID,
+            new SelectList(supplierList, "SupplierID", "Name"), "Select Supplier", new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.SupplierID, "", new { @Class = "text-danger" })
+        </div>
+    </div>
+}
+else
+{
+    @Html.HiddenFor(x => x.Name)
+    @Html.HiddenFor(x => x.SupplierID)
+    @Html.HiddenFor(x=>x.Picture)
+}
+<div class="form-row">
+    <div class="col">
+        @Html.LabelFor(x => x.UnitPrice)
+    </div>
+    <div class="col">
+        @Html.TextBoxFor(x => x.UnitPrice, new { @Class = "form-control" })
+        @Html.ValidationMessageFor(x => x.UnitPrice, "", new { @Class = "text-danger" })
+    </div>
+</div>
+<div class="form-row">
+    <div class="col">
+        @Html.LabelFor(x => x.UnitsInStock)
+    </div>
+    <div class="col">
+        @Html.TextBoxFor(x => x.UnitsInStock, new { @Class = "form-control" })
+        @Html.ValidationMessageFor(x => x.UnitsInStock, "", new { @Class = "text-danger" })
+    </div>
+</div>
+<div class="form-row">
+    <div class="col">
+        @Html.LabelFor(x => x.UnitsOnOrder)
+    </div>
+    <div class="col">
+        @Html.TextBoxFor(x => x.UnitsOnOrder, new { @Class = "form-control" })
+        @Html.ValidationMessageFor(x => x.UnitsOnOrder, "", new { @Class = "text-danger" })
+    </div>
+</div>
+<div class="form-row">
+    <div class="col">
+        @Html.LabelFor(x => x.ReorderLevel)
+    </div>
+    <div class="col">
+        @Html.TextBoxFor(x => x.ReorderLevel, new { @Class = "form-control" })
+        @Html.ValidationMessageFor(x => x.ReorderLevel, "", new { @Class = "text-danger" })
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-6">
+
+    </div>
+    <div class="col-6">
+        <div class="align-content-end">
+            <div class="form-check form-check-inline">
+                @Html.CheckBoxFor(x => x.Discontinued, new { @Class = "form-check-label" })
+                @Html.LabelFor(x => x.Discontinued, new { @Class = "form-check-input mt-2 ml-1" })
+            </div>
+        </div>
+
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col">
+        <div class="custom-file ">
+            <input asp-for="@Model.ImageFile" class="custom-file-input" type="file" accept="image/*" />
+            <label class="custom-file-label">Upload Image<strong>...</strong></label>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewData["Title"] = "Categories";
+}
+
+@model ThunderBoltStore.ViewModels.CategoriesList;
+
+<br />
+
+<div class="text-center">
+    <h1 class="display-5">Product Categories</h1>
+</div>
+
+<hr />
+
+<div class="card-deck">
+    @{
+        int dlgIndex = 0;
+    }
+    @foreach (var category in Model.CategoryList)
+    {
+        var modalUpdateID = "modalUpdate" + dlgIndex++;
+        var updateBtnID = "btnEditUser" + dlgIndex;
+        <div class="card">
+            <div class="card-header text-center" style="height:40px">
+                <h5 class="card-title">@Html.DisplayFor(x => category.Description)</h5>
+                <br />
+            </div>
+            <div class="card-body">
+                @if (category.Picture != null)
+                {
+                    String img64 = Convert.ToBase64String(category.Picture);
+                    String img64Url = string.Format("data:image/" + category.ImageType + ";base64,{0}", img64); //imagetype can be e.g. gif, jpeg, png etc.
+                    <a href='@Url.Action("Products", "Product", new { CategoryID = category.CategoryID})'>
+                    @*<a href='@Url.Page("/Products", new { CategoryID = category.CategoryID})'>*@
+                        <img src="@img64Url" style="width:100%" class="img-fluid" />
+                    </a>
+                }
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">
+                    <button class="btn-xs btn-dark" data-toggle="modal" data-target="#@modalUpdateID">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                </small>
+
+            </div>
+        </div>
+        @using (Html.BeginForm("SaveCategory", "Category", FormMethod.Post, new { enctype = "multipart/form-data", ID = "ProfileDataForm" }))
+        {
+            <div class="modal fade" id="@modalUpdateID">
+                <div class="modal-dialog modal-dialog-centered" role="dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                            <h6 class="modal-title" id="exampleModalLabel"><i class="fas fa-user-cog">&nbsp;</i>Category Details</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                            @await Html.PartialAsync("/Views/Category/_CategoryDetail.cshtml", new CategoryViewModel() { CategoryItem = category })
+                        </div>
+                        <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                            <button type="submit" name="btnSave" formnovalidate class="btn-sm btn-dark">
+                                <i class="far fa-save"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    }
+</div>
+
+
+@section Scripts {
+    <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+
+        $(document).on('click', '#btnSave', function (e) {
+            var form = $("#frmUpdateCategory");
+            form.validate();
+            if (form.valid()) {
+                var ModalID = "#addUserModal";
+                $(ModalID).modal('hide')
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+            }
+
+
+        });
+    </script>
+
+}

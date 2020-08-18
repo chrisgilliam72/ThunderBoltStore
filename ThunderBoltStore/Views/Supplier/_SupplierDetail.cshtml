@@ -1,0 +1,73 @@
+﻿
+@model Supplier
+@Html.HiddenFor(x=>x.SupplierID)
+<div class="row">
+    <div class="col">
+        <div class="form-group">
+            @Html.LabelFor(x => x.HomePage, "Home Page")
+            @Html.TextBoxFor(x => x.HomePage, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.HomePage, "", new { @Class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.ContactName, "Contact Name")
+            @Html.TextBoxFor(x => x.ContactName, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.ContactName, "", new { @Class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Address)
+            @Html.TextBoxFor(x => x.Address, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Address, "", new { @Class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.PostalCode)
+            @Html.TextBoxFor(x => x.PostalCode, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.PostalCode, "", new { @Class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Region)
+            @Html.TextBoxFor(x => x.Region, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Region, "", new { @Class = "text-danger" })
+        </div>
+    </div>
+    <div class="col">
+        <div class="form-group">
+            @Html.LabelFor(x => x.Name, "Supplier Name")
+            @Html.TextBoxFor(x => x.Name, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Name, "", new { @Class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Phone, "Contact Number")
+            @Html.TextBoxFor(x => x.Phone, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Phone, "", new { @Class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.ContactTitle, "Contact Title")
+
+            @Html.DropDownListFor(x => x.ContactTitle, new List<SelectListItem>
+                {
+                new SelectListItem {Text="Mr", Value="Mr"},
+                new SelectListItem { Text = "Mrs", Value = "Mrs" },
+                new SelectListItem { Text = "Miss", Value = "Miss" },
+                new SelectListItem { Text = "Dr", Value = "Dr" },
+                new SelectListItem { Text = "Professor", Value = "Professor" },
+                },
+                new { @Class = "form-control" }
+            )
+            @Html.ValidationMessageFor(x => x.ContactTitle, "", new { @Class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.City, "Town or City")
+            @Html.TextBoxFor(x => x.City, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.City, "", new { @Class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Country)
+            @Html.TextBoxFor(x => x.Country, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Country, "", new { @Class = "text-danger" })
+        </div>
+
+    </div>
+</div>
+
+
+

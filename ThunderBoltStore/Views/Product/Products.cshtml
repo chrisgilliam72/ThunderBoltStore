@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewData["Title"] = "Products";
+}
+@model ProductsList
+
+<h1>Products</h1>
+
+<div class="row">
+    <div class="col">
+        <div class="card-deck">
+            @{ int dlgIndex = 0;}
+            @foreach (var product in Model.Products)
+            {
+                var delBtnID = "btnDelUser" + dlgIndex;
+                var updateBtnID = "btnEditUser" + dlgIndex;
+                var modalDelID = "modalDel" + dlgIndex;
+                var modalUpdateID = "modalUpdate" + dlgIndex++;
+
+
+                <div class="card">
+                    <div class="card-header text-center" style="height:40px">
+                        <h5 class="card-title">@Html.DisplayFor(x => product.Name)</h5>
+                        <br />
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <div>
+
+                            @if (product.Picture != null)
+                            {
+                                String img64 = Convert.ToBase64String(product.Picture);
+                                String img64Url = string.Format("data:image/" + product.ImageType + ";base64,{0}", img64); //imagetype can be e.g. gif, jpeg, png etc.
+                                <img src="@img64Url" class="card-img-top" />
+                            }
+
+                        </div>
+                        <div class="mt-auto">
+                            <div class="align-text-bottom">
+                                @product.UnitsInStock in Stock
+                                (@product.SupplierName)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            <button class="btn-xs btn-dark" data-toggle="modal" , data-target="#@modalUpdateID">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </small>
+                        <div class="float-right">
+                            <small class="text-muted">
+                                <button class="btn-xs btn-danger" data-toggle="modal" , data-target="#@modalDelID">
+                                    <i class="fas fa-times"></i> Deactivate
+                                </button>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                @using (Html.BeginForm("DeactivateProduct", "Product", FormMethod.Post))
+                {
+                    @Html.HiddenFor(x => product.ProductID)
+                    @Html.HiddenFor(x => product.CategoryID)
+                    <div class="modal fade" id="@modalDelID">
+                        <div class="modal-dialog modal-dialog-centered" role="dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                    <h6 class="modal-title" id="exampleModalLabel">   <i class="fas fa-box">&nbsp;</i>Confirm deactivation of @product.Name details</h6>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                                    Are you sure you want to deactivate this product?
+                                </div>
+                                <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                    <button type="button" class="btn-dark btn-sm  button-cancel" data-dismiss="modal">CANCEL</button>
+                                    <button id="@delBtnID" type="submit" class="btn btn-danger  btn-sm btnSubmit float-right">DEACTIVATE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+                @using (Html.BeginForm("SaveProduct", "Product", FormMethod.Post, new { enctype = "multipart/form-data", ID = "frmUpdateProduct" }))
+                {
+                    <div class="modal fade" id="@modalUpdateID">
+                        <div class="modal-dialog modal-dialog-centered" role="dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                    <h6 class="modal-title" id="exampleModalLabel">   <i class="fas fa-box">&nbsp;</i>@product.Name details</h6>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                                    @await Html.PartialAsync("/Views/Product/_ProductDetail.cshtml", product)
+                                </div>
+                                <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                    <button type="submit" name="btnSave" class="btn-sm btn-dark">
+                                        <i class="far fa-save"></i> Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col">
+        <div class="float-right">
+            <button type="button" class="btn btn-dark" data-toggle="modal" , data-target="#modalAddProduct">
+                <i class="fa fa-plus-square"></i> Add Product
+            </button>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("AddProduct", "Product", FormMethod.Post, new { enctype = "multipart/form-data", ID = "frmUpdateProduct" }))
+    {
+        <div class="modal fade" id="modalAddProduct">
+            <div class="modal-dialog modal-dialog-centered" role="dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                        <h6 class="modal-title" id="exampleModalLabel">   <i class="fas fa-box">&nbsp;</i>New Product</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                        @await Html.PartialAsync("/Views/Product/_ProductDetail.cshtml", new Product() { CategoryID = Model.CategoryID })
+                    </div>
+                    <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                        <button type="submit" name="btnSave" class="btn-sm btn-dark">
+                            <i class="far fa-save"></i> Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+
+    </script>
+}

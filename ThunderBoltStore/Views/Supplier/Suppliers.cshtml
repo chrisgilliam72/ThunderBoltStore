@@ -1,0 +1,167 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Suppliers";
+}
+
+@model ThunderBoltStore.ViewModels.SuppliersList
+
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col">
+            <div class="text-center">
+                <h1 class="display-5">Suppliers</h1>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col">
+            <table class="table table-bordered table-striped table-sm table-hover">
+                <thead class="bg-transparent text-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Url</th>
+                        <th>Contact Title</th>
+                        <th>Contact</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>Region</th>
+                        <th>PostalCode</th>
+                        <th>Country</th>
+                        <th>Phone</th>
+
+                    </tr>
+                </thead>
+                <tbody class="bg-transparent text-light ">
+                    @for (int i = 0; i < Model.SupplierCount; i++)
+                    {
+                        var delBtnID = "btnDelSupplier" + i;
+                        var updateBtnID = "btnEditSupplier" + i;
+                        var modalDelID = "modalDel" + i;
+                        var modalUpdateID = "modalUpdate" + i;
+
+                    <tr>
+                        <td>@Html.DisplayFor(x => Model.SupplierList[i].Name)</td>
+                        <td>
+                            <a href="@Model.SupplierList[i].HomePage" target="_blank">
+                                <div style="height:100%;width:100%">
+                                    @Html.DisplayFor(x => @Model.SupplierList[i].HomePage)
+                                </div>
+                            </a>
+                        </td>
+                        <td>@Html.DisplayFor(x => Model.SupplierList[i].ContactTitle)</td>
+                        <td>@Html.DisplayFor(x => Model.SupplierList[i].ContactName)</td>
+                        <td>@Html.DisplayFor(x => Model.SupplierList[i].Address)</td>
+                        <td>@Html.DisplayFor(x => Model.SupplierList[i].City)</td>
+                        <td>@Html.DisplayFor(x => Model.SupplierList[i].Region)</td>
+                        <td>@Html.DisplayFor(x => Model.SupplierList[i].PostalCode)</td>
+                        <td>@Html.DisplayFor(x => Model.SupplierList[i].Country)</td>
+                        <td>@Html.DisplayFor(x => Model.SupplierList[i].Phone)</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-bars"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                    <button class="dropdown-item btnSubmit" type="button" data-toggle="modal" , data-target="#@modalUpdateID"><i class="fa fa-edit"></i> Edit</button>
+                                    <button class="dropdown-item btnSubmit" type="button"  data-toggle="modal" , data-target="#@modalDelID"> <i class="fa fa-trash-alt"></i> Deactivate</button>
+                                </div>
+                            </div>
+
+                            @using (Html.BeginForm("DeactivateSupplier", "Supplier", FormMethod.Post))
+                            {
+                                @Html.HiddenFor(x => @Model.SupplierList[i].SupplierID)
+                                <div class="modal fade" id="@modalDelID">
+                                    <div class="modal-dialog modal-dialog-centered" role="dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                                <h6 class="modal-title" id="exampleModalLabel">   <i class="fas fa-box">&nbsp;</i>Confirm deactivation of @Model.SupplierList[i].Name</h6>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                                                Are you sure you want to deactivate this product?
+                                            </div>
+                                            <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                                <button type="button" class="btn-dark btn-sm  button-cancel" data-dismiss="modal">CANCEL</button>
+                                                <button id="@delBtnID" type="submit" class="btn btn-danger  btn-sm btnSubmit float-right">DEACTIVATE</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @using (Html.BeginForm("SaveSupplier", "Supplier", FormMethod.Post))
+                            {
+                                <div class="modal fade" id="@modalUpdateID">
+                                    <div class="modal-dialog modal-dialog-centered" role="dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                                <h6 class="modal-title" id="exampleModalLabel">   <i class="fas fa-box">&nbsp;</i>@Model.SupplierList[i].Name details</h6>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                                                @await Html.PartialAsync("/Views/Supplier/_SupplierDetail.cshtml", Model.SupplierList[i])
+                                            </div>
+                                            <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                                <button type="submit" name="btnSave" class="btn-sm btn-dark">
+                                                    <i class="far fa-save"></i> Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </td>
+
+
+                    </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="float-right">
+                <button type="button" class="btn btn-dark" data-toggle="modal" , data-target="#modalAddSupplier">
+                    <i class="fa fa-plus-square"></i> Add Supplier
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("AddSupplier", "Supplier", FormMethod.Post))
+    {
+        <div class="modal fade" id="modalAddSupplier">
+            <div class="modal-dialog modal-dialog-centered" role="dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                        <h6 class="modal-title" id="exampleModalLabel">   <i class="fas fa-box">&nbsp;</i>New Product</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                        @await Html.PartialAsync("/Views/Supplier/_SupplierDetail.cshtml", new Supplier())
+                    </div>
+                    <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                        <button type="submit" name="btnSave" class="btn-sm btn-dark">
+                            <i class="far fa-save"></i> Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

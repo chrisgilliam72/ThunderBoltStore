@@ -1,0 +1,22 @@
+﻿@model ThunderBoltStore.ViewModels.ImageUpload
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="custom-file ">
+            <input asp-for="ImageFile" class="custom-file-input" type="file" accept="image/*" />
+            <label class="custom-file-label">Upload Image<strong>...</strong></label>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col">
+                <div class="float-right">
+                    <button type="submit" name="btnUpload" formnovalidate class="btn-sm btn-dark">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
