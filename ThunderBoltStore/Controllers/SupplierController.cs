@@ -12,7 +12,7 @@ using ThunderBoltStore.ViewModels;
 
 namespace ThunderBoltStore.Controllers
 {
-    //test for github
+
     public class SupplierController : Controller
     {
         ISuppliersRepository _suppliersRepository;
