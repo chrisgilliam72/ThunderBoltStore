@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,11 @@ namespace ThunderBoltStore
         {
             services.AddDbContextPool<ThunderBoltContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("ThunderBoltDBConnection")));
+            services.AddIdentity<IdentityUser, IdentityRole>(opt =>
+            {
+                opt.SignIn.RequireConfirmedEmail = true;
+            }).AddEntityFrameworkStores<ThunderBoltContext>()
+            .AddDefaultTokenProviders();
             services.AddControllersWithViews();
             services.AddScoped<IProductsRepository, SQLProductsRepository>();
             services.AddScoped<ISuppliersRepository, SQLSuppliersRepository>();
