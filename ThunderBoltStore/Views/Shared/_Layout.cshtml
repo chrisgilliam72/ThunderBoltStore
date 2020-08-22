@@ -51,38 +51,15 @@
         </main>
     </div>
 
-    @*<div class="container">
-            <main role="main" class="pb-3">
-                <div style="background-color:lightgray;top:0px;left:0; position: fixed;height:95%;line-height: 3.5;width: 10%;padding-top: 10px; padding-left:10px">
-
-
-
-                </div>
-
-                <div style="background-image: linear-gradient(to bottom right, #808080, #3fada8); height:100% ">
-                    @RenderBody()
-                </div>
-            </main>
-        </div>*@
-
-
-    @*<div class="container">
-            <main role="main" class="pb-3">
-
-            </main>
-        </div>*@
-
     <footer class="border-top footer text-muted" style="background-image: linear-gradient(#ffd89b, #19547b);height:70px;">
         <div class="container">
             &copy; 2020 - ThunderBoltStore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
-
-
 </html>

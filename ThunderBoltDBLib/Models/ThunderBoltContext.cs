@@ -1,10 +1,11 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ThunderBoltDBLib.Models
 {
-    public partial class ThunderBoltContext : DbContext
+    public partial class ThunderBoltContext : IdentityDbContext
     {
 
         public ThunderBoltContext(DbContextOptions<ThunderBoltContext> options)
@@ -24,6 +25,8 @@ namespace ThunderBoltDBLib.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Categories>(entity =>
             {
                 entity.HasKey(e => e.PkCategoryId)

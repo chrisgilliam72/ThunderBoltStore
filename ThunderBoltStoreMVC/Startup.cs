@@ -5,16 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ThunderBoltDBLib.Models;
-using ThunderBoltStore.Interfaces;
-using ThunderBoltStore.Models;
 
-namespace ThunderBoltStore
+namespace ThunderBoltStoreMVC
 {
     public class Startup
     {
@@ -28,20 +23,7 @@ namespace ThunderBoltStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<ThunderBoltContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("ThunderBoltDBConnection")));
-            services.AddIdentity<IdentityUser, IdentityRole>(opt =>
-            {
-                opt.SignIn.RequireConfirmedEmail = false;
-            }).AddEntityFrameworkStores<ThunderBoltContext>()
-            .AddDefaultTokenProviders();
             services.AddControllersWithViews();
-            services.AddScoped<IProductsRepository, SQLProductsRepository>();
-            services.AddScoped<ISuppliersRepository, SQLSuppliersRepository>();
-            services.AddScoped<IOrdersRepository, SQLOrdersRepository>();
-            services.AddScoped<ICategoryRepository, SQLCategoryRepository>();
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,7 +43,7 @@ namespace ThunderBoltStore
             app.UseStaticFiles();
 
             app.UseRouting();
-            //app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
