@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ThunderBoltStore.Interfaces;
 using ThunderBoltStore.Models;
 using ThunderBoltStore.ViewModels;
 
 namespace ThunderBoltStore.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
-        private IProductsRepository _productsRepository;
+        private readonly ILogger<ProductController> _logger;
+        private readonly IProductsRepository _productsRepository;
 
-        public ProductController(IProductsRepository productsRepository)
+        public ProductController(ILogger<ProductController> logger,IProductsRepository productsRepository)
         {
+            _logger = logger;
             _productsRepository = productsRepository;
         }
 

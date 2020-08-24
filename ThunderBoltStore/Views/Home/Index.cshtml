@@ -2,8 +2,7 @@
     ViewData["Title"] = "Home Page";
 
 }
-@model RegistrationDetails
-
+@model LoginDetails
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <h2 class="display-5"> Please log in to continue </h2>
@@ -12,38 +11,39 @@
 <div class="container" style="width:400px; height:300px; border-style:solid; border-color:goldenrod; border-width:1px">
     @using (Html.BeginForm("Login", "Home", FormMethod.Post))
     {
-        <div class="mt-3">
-            <div class="form-group">
-                @Html.LabelFor(x => x.Email, new { @Class = "control-label" })
-                @Html.TextBoxFor(x => x.Email, new { @Class = "form-control", Type = "Email" })
-                @Html.ValidationMessageFor(x => x.Email, "", new { @Class = "text-danger" })
-            </div>
+    <div class="mt-3">
+        <div class="form-group">
+            @Html.LabelFor(x => x.Email, new { @Class = "control-label" })
+            @Html.TextBoxFor(x => x.Email, new { @Class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Email, "", new { @Class = "text-danger" })
+        </div>
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.Password, new { @Class = "control-label" })
-                @Html.TextBoxFor(x => x.Password, new { @Class = "form-control", Type = "Password" })
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="row">
-                <div class="col">
-                    <div class="text-center">
-                        <button id="btnIDLogin" type="submit" class="btn btn-danger  btn-sm btnSubmit ">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <br/>
-            <div class="row">
-                <div class="col">
-                    <p style="color:white; font-weight:bolder">
-                        Don't have an account?  <a asp-action="Register" asp-controller="home" data-toggle="modal" data-target="#modalRegister">&nbsp;&nbsp;&nbsp;Register here</a>
-                    </p>
-
+        <div class="form-group">
+            @Html.LabelFor(x => x.Password, new { @Class = "control-label" })
+            @Html.TextBoxFor(x => x.Password, new { @Class = "form-control", Type = "Password" })
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        @Html.ValidationMessage("Error", new { @Class = "text-danger" })
+        <br />
+        <div class="row">
+            <div class="col">
+                <div class="text-center">
+                    <button id="btnIDLogin" type="submit" class="btn btn-danger  btn-sm btnSubmit ">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
                 </div>
             </div>
         </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <p style="color:white; font-weight:bolder">
+                    Don't have an account?  <a asp-action="Register" asp-controller="home" data-toggle="modal" data-target="#modalRegister">&nbsp;&nbsp;&nbsp;Register here</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
     }
 
     @using (Html.BeginForm("Register", "Home", FormMethod.Post))

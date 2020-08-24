@@ -42,6 +42,16 @@ namespace ThunderBoltStore
             services.AddScoped<ICategoryRepository, SQLCategoryRepository>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddMvc();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+                options.LoginPath = "/home/index";
+                options.AccessDeniedPath = "/home/index";
+                options.SlidingExpiration = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,7 +71,7 @@ namespace ThunderBoltStore
             app.UseStaticFiles();
 
             app.UseRouting();
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

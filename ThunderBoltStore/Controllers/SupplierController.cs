@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Logging;
 using ThunderBoltDBLib.Models;
 using ThunderBoltStore.Interfaces;
 using ThunderBoltStore.Models;
@@ -12,13 +14,14 @@ using ThunderBoltStore.ViewModels;
 
 namespace ThunderBoltStore.Controllers
 {
-    //test commit after name change
+    [Authorize]
     public class SupplierController : Controller
     {
-        ISuppliersRepository _suppliersRepository;
-
-        public SupplierController(ISuppliersRepository suppliersRepository)
+        private readonly ISuppliersRepository _suppliersRepository;
+        private readonly ILogger<SupplierController> _logger;
+        public SupplierController(ILogger<SupplierController> logger,ISuppliersRepository suppliersRepository)
         {
+            _logger = logger;
             _suppliersRepository = suppliersRepository;
         }
 

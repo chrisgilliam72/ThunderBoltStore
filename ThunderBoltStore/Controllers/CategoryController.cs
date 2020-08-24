@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ThunderBoltDBLib.Models;
 using ThunderBoltStore.ViewModels;
 
 namespace ThunderBoltStore.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository _categoryRepository;
-        public CategoryController(ICategoryRepository categoryRepository)
+        private readonly ILogger<CategoryController> _logger;
+        public CategoryController(ILogger<CategoryController>logger, ICategoryRepository categoryRepository)
         {
+            _logger = logger;
             _categoryRepository = categoryRepository;
         }
 

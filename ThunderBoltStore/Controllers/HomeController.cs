@@ -16,15 +16,21 @@ namespace ThunderBoltStore.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<IdentityUser> userManager)
+        public HomeController(ILogger<HomeController> logger, UserManager<IdentityUser> userManager,
+                               SignInManager<IdentityUser> signInManager)
         {
             _logger = logger;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
+
 
         public IActionResult Index()
         {
+            if (_signInManager.IsSignedIn(User))
+                return RedirectToAction("Orders", "Orders");
             return View();
         }
 
@@ -38,10 +44,26 @@ namespace ThunderBoltStore.Controllers
         public async Task<IActionResult> VerifyEmailDoesntExist([Bind(Prefix = "Email")] string emailAddress)
         {
             if (emailAddress != null)
-            {              
+            {
                 var usrDetails = await _userManager.FindByEmailAsync(emailAddress);
                 if (usrDetails != null)
                     return Json($"Email address already registered");
+
+                return Json(true);
+            }
+
+            return Json(true);
+        }
+
+        [AcceptVerbs("GET")]
+        [AllowAnonymous]
+        public async Task<IActionResult> VerifyEmailExists([Bind(Prefix = "Email")] string emailAddress)
+        {
+            if (emailAddress != null)
+            {
+                var usrDetails = await _userManager.FindByEmailAsync(emailAddress);
+                if (usrDetails == null)
+                    return Json($"Email not registered");
 
                 return Json(true);
             }
@@ -55,8 +77,8 @@ namespace ThunderBoltStore.Controllers
         {
             String errorList = "";
             var passwordValidator = new PasswordValidator<IdentityUser>();
-            var result =await passwordValidator.ValidateAsync(_userManager, null, password);
-            if (result!=IdentityResult.Success)
+            var result = await passwordValidator.ValidateAsync(_userManager, null, password);
+            if (result != IdentityResult.Success)
             {
                 foreach (var error in result.Errors)
                     errorList += error.Description + "<br/>";
@@ -66,9 +88,22 @@ namespace ThunderBoltStore.Controllers
             return Json(true);
         }
 
-        public IActionResult Login(RegistrationDetails model)
+        public async Task<IActionResult> Login(LoginDetails model)
         {
-            return RedirectToAction("Orders", "Orders");
+            var result = await _signInManager.PasswordSignInAsync(model.Email,
+            model.Password, false, lockoutOnFailure: true);
+
+            if (result == Microsoft.AspNetCore.Identity.SignInResult.Success)
+                return RedirectToAction("Orders", "Orders");
+
+            ModelState.AddModelError("Error", "Invalid password");
+            return View("Index", model);
+        }
+
+        public async Task<IActionResult> Logout(LoginDetails model)
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index",model);
         }
 
         public async Task<IActionResult> Register(RegistrationDetails model)

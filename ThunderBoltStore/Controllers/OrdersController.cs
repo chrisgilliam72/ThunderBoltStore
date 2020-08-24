@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ThunderBoltStore.Interfaces;
 using ThunderBoltStore.ViewModels;
 
 namespace ThunderBoltStore.Controllers
 {
+    [Authorize]
     public class OrdersController : Controller
     {
         private readonly IOrdersRepository _ordersRepository;
-        public OrdersController(IOrdersRepository ordersRepository)
+        private readonly ILogger<OrdersController> _logger;
+        public OrdersController(ILogger<OrdersController> logger,IOrdersRepository ordersRepository)
         {
+            _logger = logger;
             _ordersRepository = ordersRepository;
         }
 
