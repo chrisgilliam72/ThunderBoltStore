@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ThunderBoltStore.Interfaces;
@@ -21,11 +22,70 @@ namespace ThunderBoltStore.Controllers
             _ordersRepository = ordersRepository;
         }
 
-        public async Task<IActionResult> Orders()
+        private async Task<OrdersList> RefreshOrders()
         {
             var model = new OrdersList();
-            var orders= await  _ordersRepository.GetAllOrders();
+            var orders = await _ordersRepository.GetAllOrders();
             model.OrderList.AddRange(orders);
+            return model;
+        }
+
+        public async Task<IActionResult> CancelOrder(IFormCollection frmData)
+        {
+            var canceled = true;
+            var frmDataArray = frmData.ToArray();
+            var orderID = Convert.ToInt32(frmDataArray[0].Value);
+            try
+            {
+                await _ordersRepository.CancelOrder(orderID);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Order Cancel failure", new { Name = "OrderID", Value = orderID });
+                canceled = false;
+            }
+            var model = await RefreshOrders();
+            if (canceled)
+            {
+                model.LastOperation = OrderOperation.Cancel;
+                model.ShowOperationSuccessful = true;
+            }
+
+            else
+                model.ShowOperationFail = true;
+            return PartialView("/Views/Orders/_OrdersTable.cshtml", model);
+        }
+
+        public async Task<IActionResult> ShipOrder(IFormCollection frmData)
+        {
+            var shipped = true;
+            var frmDataArray = frmData.ToArray();
+            var orderID = Convert.ToInt32(frmDataArray[0].Value);
+            try
+            {
+                await _ordersRepository.ShipOrder(orderID, DateTime.Today);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Order shipment failure", new { Name = "OrderID", Value = orderID });
+                shipped = false;
+            }
+            var model = await RefreshOrders();
+            if (shipped)
+            {
+                model.LastOperation = OrderOperation.Ship ;
+                model.ShowOperationSuccessful = true;
+            }
+
+            else
+                model.ShowOperationFail = true;
+            return PartialView("/Views/Orders/_OrdersTable.cshtml", model);
+        }
+
+        public async Task<IActionResult> Orders()
+        {
+            var model = await RefreshOrders();
+            model.ShowOperationSuccessful = true;
             return View(model);
         }
     }

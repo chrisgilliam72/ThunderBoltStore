@@ -4,65 +4,36 @@
 }
 @model ThunderBoltStore.ViewModels.OrdersList
 
-    <div class="container">
-        <br />
-        <div class="row">
-            <div class="col">
-                <div class="text-center">
-                    <h1 class="display-5">Orders</h1>
-                </div>
-            </div>
-        </div>
-        <hr />
-        <div class="row">
-            <div class="col">
-                <table class="table table-bordered table-striped table-sm table-hover">
-                    <thead class="bg-transparent text-light">
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Order Date</th>
-                            <th>Category</th>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Unit Price</th>
-                            <th>Discount(%)</th>
-                            <th>Total price</th>
-                            <th>Supplier</th>
-                            <th>Date Shipped</th>
-
-                        </tr>
-                    </thead>
-                    <tbody class="bg-transparent text-light ">
-                        @for (int i = 0; i < Model.OrderList.Count; i++)
-                        {
-                        <tr>
-                            <td>@Html.DisplayFor(x => Model.OrderList[i].OrderID)</td>
-                            <td>@Html.DisplayFor(x => Model.OrderList[i].OrderDateString)</td>
-                            <td>@Html.DisplayFor(x => Model.OrderList[i].Product.Category.Name)</td>
-                            <td>@Html.DisplayFor(x => Model.OrderList[i].Product.Name)</td>
-                            <td>@Html.DisplayFor(x => Model.OrderList[i].Quantity)</td>
-                            <td>@Html.DisplayFor(x => Model.OrderList[i].Product.UnitPrice)</td>
-                            <td>@Html.DisplayFor(x => Model.OrderList[i].Discount)</td>
-                            <td>@Html.DisplayFor(x => Model.OrderList[i].TotalPrice)</td>
-                            <td>@Html.DisplayFor(x => Model.OrderList[i].Product.Supplier.Name)</td>
-                            <td></td>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-bars"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                        <button class="dropdown-item btnSubmit" type="button">  <i class="fas fa-shipping-fast"></i> Ship</button>
-                                        <button class="dropdown-item btnSubmit" type="button"> <i class="fas fa-times"></i> Cancel</button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col">
+            <div class="text-center">
+                <h1 class="display-5">Orders</h1>
             </div>
         </div>
     </div>
+    <hr />
+    <div class="row">
+        <div class="col">
+            @{await Html.RenderPartialAsync("/Views/Orders/_OrdersTable.cshtml", @Model);}
+        </div>
+    </div>
 
-  
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        $(document).on('click', "[id*='btnShip']", function (e) {
+            var lastChar = this.id[this.id.length - 1];
+            $('.modal-backdrop').remove();
+        })
+
+        $(document).on('click', "[id*='btnCancel']", function (e) {
+            var lastChar = this.id[this.id.length - 1];
+            $('.modal-backdrop').remove();
+        })
+    </script>
+}

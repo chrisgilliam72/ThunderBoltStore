@@ -9,5 +9,8 @@ namespace ThunderBoltStore.Interfaces
     public interface IOrdersRepository
     {
         Task<IEnumerable<Order>> GetAllOrders();
+        Task<Order> ShipOrder(int orderID, DateTime dateShipped);
+        Task<Order> CancelOrder(int orderID);
+
     }
 }

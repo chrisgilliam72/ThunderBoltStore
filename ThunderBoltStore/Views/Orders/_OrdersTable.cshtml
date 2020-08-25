@@ -1,0 +1,137 @@
+﻿@model OrdersList
+
+<div id="divOrdersTbl">
+    <div class="row">
+        <div class="col">
+            <div class="float-right">
+
+                @if (Model.ShowOperationSuccessful)
+                {
+                    if (Model.LastOperation == OrderOperation.Ship)
+                    {
+                        @await Html.PartialAsync("/Views/Shared/_ToastMessage.cshtml", new ToastMessage("Success", "Order marked as shipped"));
+                    }
+                    else if (Model.LastOperation == OrderOperation.Cancel)
+                    {
+                        @await Html.PartialAsync("/Views/Shared/_ToastMessage.cshtml", new ToastMessage("Success", "Order canceled"));
+                    }
+                    <br />
+                }
+                else if (Model.ShowOperationFail)
+                {
+                    @await Html.PartialAsync("/Views/Shared/_ToastMessage.cshtml", new ToastMessage("Fail", "Oops something went wrong") { IsError = true });
+                    <br />
+                }
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped table-sm table-hover">
+        <thead class="bg-transparent text-light">
+            <tr>
+                <th>Order ID</th>
+                <th>Order Date</th>
+                <th>Category</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Discount(%)</th>
+                <th>Total price</th>
+                <th>Supplier</th>
+                <th>Date Shipped</th>
+
+            </tr>
+        </thead>
+        <tbody class="bg-transparent text-light ">
+            @for (int i = 0; i < Model.OrderList.Count; i++)
+            {
+                var frmShipID = "frmShip" + i;
+                var shipButtonID = "btnShip" + i;
+                var modelShipID = "modalShip" + i;
+
+                var frmCancelID = "frmCancel" + i;
+                var cancelButtonID = "btnCancel" + i;
+                var modelCancelID = "modalCancel" + i;
+
+                <tr>
+                    <td>@Html.DisplayFor(x => Model.OrderList[i].OrderID)</td>
+                    <td>@Html.DisplayFor(x => Model.OrderList[i].OrderDateString)</td>
+                    <td>@Html.DisplayFor(x => Model.OrderList[i].Product.Category.Name)</td>
+                    <td>@Html.DisplayFor(x => Model.OrderList[i].Product.Name)</td>
+                    <td>@Html.DisplayFor(x => Model.OrderList[i].Quantity)</td>
+                    <td>@Html.DisplayFor(x => Model.OrderList[i].Product.UnitPrice)</td>
+                    <td>@Html.DisplayFor(x => Model.OrderList[i].Discount)</td>
+                    <td>@Html.DisplayFor(x => Model.OrderList[i].TotalPrice)</td>
+                    <td>@Html.DisplayFor(x => Model.OrderList[i].Product.Supplier.Name)</td>
+                    <td>@Html.DisplayFor(x => Model.OrderList[i].ShippedDateString)</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                <button class="dropdown-item btnSubmit" type="button" data-toggle="modal" data-target="#@modelShipID">  <i class="fas fa-shipping-fast"></i> Ship</button>
+                                <button class="dropdown-item btnSubmit" type="button" data-toggle="modal" data-target="#@modelCancelID"> <i class="fas fa-times"></i> Cancel</button>
+                            </div>
+                        </div>
+
+                        <form id="@frmShipID" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divOrdersTbl" asp-action="ShipOrder" asp-controller="Orders" role="form" data-ajax-method="post">
+                            @Html.HiddenFor(x => Model.OrderList[i].OrderID)
+                            <div class="modal fade" id="@modelShipID">
+                                <div class="modal-dialog modal-dialog-centered" role="dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                            <h6 class="modal-title" id="exampleModalLabel"><i class="fas fa-user-cog">&nbsp;</i>Confirm Shipping</h6>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                                            Are you sure you want to ship this order now?
+                                        </div>
+                                        <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                            <button type="button" class="btn-dark btn-sm  button-cancel" data-dismiss="modal">CANCEL</button>
+                                            <button id="@shipButtonID" type="submit" class="btn btn-danger  btn-sm btnSubmit float-right">SHIP</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                        <form id="@frmCancelID" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divOrdersTbl" asp-action="CancelOrder" asp-controller="Orders" role="form" data-ajax-method="post">
+                            @Html.HiddenFor(x => Model.OrderList[i].OrderID)
+                            <div class="modal fade" id="@modelCancelID">
+                                <div class="modal-dialog modal-dialog-centered" role="dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                            <h6 class="modal-title" id="exampleModalLabel"><i class="fas fa-user-cog">&nbsp;</i>Confirm Shipping</h6>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                                            Are you sure you want to cancel this order?
+                                        </div>
+                                        <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                            <button type="button" class="btn-dark btn-sm  button-cancel" data-dismiss="modal">CANCEL</button>
+                                            <button id="@cancelButtonID" type="submit" class="btn btn-danger  btn-sm btnSubmit float-right">CANCEL ORDER</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".toast").toast({ delay: 3000 });
+        $('.toast').toast('show');
+    });
+</script>
