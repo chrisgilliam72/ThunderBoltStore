@@ -9,6 +9,7 @@ namespace ThunderBoltStore.Models
 {
     public class Supplier
     {
+        public int DisplayIndex { get; set; }
         public int SupplierID { get; set; }
 
         [Required]
@@ -34,6 +35,8 @@ namespace ThunderBoltStore.Models
         public string Phone { get; set; }
         [Required]
         public string HomePage { get; set; }
+        public bool IsActive { get; set; }
+
 
         public static explicit operator Supplier(Suppliers dbSupplier)
         {
@@ -52,6 +55,7 @@ namespace ThunderBoltStore.Models
                     Country = dbSupplier.Country,
                     Phone = dbSupplier.Phone,
                     HomePage = dbSupplier.HomePage,
+                    IsActive=dbSupplier.IsActive,
                 };
 
                 return supplier;
@@ -77,6 +81,7 @@ namespace ThunderBoltStore.Models
                 Country = supplier.Country,
                 Phone = supplier.Phone,
                 HomePage = supplier.HomePage,
+                IsActive=supplier.IsActive
             };
 
             return dbSupplier;

@@ -1,0 +1,119 @@
+﻿@model ThunderBoltStore.ViewModels.SuppliersList
+<div id="divTableSuppliers">
+    @{ var data = Html.Raw(Model);}
+    <div class="row">
+        <div class="col">
+            <div class="float-right">
+                @if (Model.ShowOperationSuccessful)
+                {
+
+                    @await Html.PartialAsync("/Views/Shared/_ToastMessage.cshtml", new ToastMessage("Success", Model.LastOperation));
+
+                    <br />
+                }
+                else if (Model.ShowOperationFail)
+                {
+                    @await Html.PartialAsync("/Views/Shared/_ToastMessage.cshtml", new ToastMessage("Fail", "Oops something went wrong") { IsError = true });
+                    <br />
+                }
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped table-sm table-hover">
+        <thead class="bg-transparent text-light">
+            <tr>
+                <th>Name</th>
+                <th>Url</th>
+                <th>Contact Title</th>
+                <th>Contact</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Region</th>
+                <th>PostalCode</th>
+                <th>Country</th>
+                <th>Phone</th>
+
+            </tr>
+        </thead>
+        <tbody class="bg-transparent text-light ">
+            @{
+                int dlgIndex = 0;
+            }
+            @foreach (var supplier in Model.SupplierList)
+            {
+                var delBtnID = "btnDelSupplier" + dlgIndex;
+                var updateBtnID = "btnEditSupplier" + dlgIndex;
+                var modalDelID = "modalDel" + dlgIndex;
+                var modalUpdateID = "modalUpdate" + dlgIndex;
+                var frmDelID = "frmDel" + dlgIndex;
+                var frmUpdateID = "frmUpdate" + dlgIndex;
+                supplier.DisplayIndex = dlgIndex;
+                <tr>
+                    <td>@Html.DisplayFor(x => supplier.Name)</td>
+                    <td>
+                        <a href="@supplier.HomePage" target="_blank">
+                            <div style="height:100%;width:100%">
+                                @Html.DisplayFor(x => supplier.HomePage)
+                            </div>
+                        </a>
+                    </td>
+                    <td>@Html.DisplayFor(x => supplier.ContactTitle)</td>
+                    <td>@Html.DisplayFor(x => supplier.ContactName)</td>
+                    <td>@Html.DisplayFor(x => supplier.Address)</td>
+                    <td>@Html.DisplayFor(x => supplier.City)</td>
+                    <td>@Html.DisplayFor(x => supplier.Region)</td>
+                    <td>@Html.DisplayFor(x => supplier.PostalCode)</td>
+                    <td>@Html.DisplayFor(x => supplier.Country)</td>
+                    <td>@Html.DisplayFor(x => supplier.Phone)</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                <button class="dropdown-item btnSubmit" type="button" data-toggle="modal" , data-target="#@modalUpdateID"><i class="fa fa-edit"></i> Edit</button>
+                                <button class="dropdown-item btnSubmit" type="button" data-toggle="modal" , data-target="#@modalDelID"> <i class="fa fa-trash-alt"></i> Deactivate</button>
+                            </div>
+                        </div>
+
+                        <form id="@frmDelID" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divTableSuppliers" asp-action="DeactivateSupplier" asp-controller="Supplier" role="form" data-ajax-method="post">
+                            @Html.HiddenFor(x => @supplier.SupplierID)
+                            <div class="modal fade" id="@modalDelID">
+                                <div class="modal-dialog modal-dialog-centered" role="dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                            <h6 class="modal-title" id="exampleModalLabel">   <i class="fas fa-box">&nbsp;</i>Confirm deactivation of @supplier.Name</h6>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                                            Are you sure you want to deactivate @supplier.Name ?
+                                        </div>
+                                        <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                                            <button type="button" class="btn-dark btn-sm  button-cancel" data-dismiss="modal">CANCEL</button>
+                                            <button id="@delBtnID" type="submit" class="btn btn-danger  btn-sm btnSubmit float-right">DEACTIVATE</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        @await Html.PartialAsync("/Views/Supplier/_SupplierDetails2.cshtml", supplier)
+                    </td>
+
+
+                </tr>
+                dlgIndex++;
+            }
+        </tbody>
+    </table>
+
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".toast").toast({ delay: 3000 });
+        $('.toast').toast('show');
+    });
+</script>

@@ -30,33 +30,49 @@ namespace ThunderBoltStore.Controllers
             return View();
         }
 
-
+        private async Task<SuppliersList> RefreshSuppliers()
+        {
+            var model = new SuppliersList();
+            var suppliers = await _suppliersRepository.GetAllSuppliers();
+            model.SupplierList.AddRange(suppliers);
+            return model;
+        }
         [HttpPost]
         public async Task<IActionResult> DeactivateSupplier(IFormCollection frmData)
         {
             var dataArray =frmData.ToArray();
             int supplierID = Convert.ToInt32(dataArray[0].Value);
             await _suppliersRepository.Activation(supplierID, false);
-            return RedirectToAction("Suppliers");
+            var suppliersListModel =await RefreshSuppliers();
+            suppliersListModel.ShowOperationSuccessful = true; ;
+            suppliersListModel.LastOperation = "Supplier deactivated";
+            return PartialView("/Views/Supplier/_SuppliersTable.cshtml", suppliersListModel);
         }
 
 
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> SaveSupplier(Supplier model)
         {
             await _suppliersRepository.UpdateSupplier(model);
-            return RedirectToAction("Suppliers");
+            var suppliersListModel = await RefreshSuppliers();
+            suppliersListModel.ShowOperationSuccessful = true; ;
+            suppliersListModel.LastOperation = "Supplier updated";
+            ModelState.Clear();
+            var data = PartialView("/Views/Supplier/_SuppliersTable.cshtml", suppliersListModel);
+            return data;
         }
         public async Task<IActionResult> AddSupplier(Supplier model)
         {
             await _suppliersRepository.AddSupplier(model);
-            return RedirectToAction("Suppliers");
+            var suppliersListModel =await  RefreshSuppliers();
+            suppliersListModel.ShowOperationSuccessful = true; ;
+            suppliersListModel.LastOperation = "Supplier updated";
+            return PartialView("/Views/Supplier/_SuppliersTable.cshtml", suppliersListModel);
         }
 
         public async Task<IActionResult> Suppliers()
         {
-            var model = new SuppliersList();
-            var suppliers = await _suppliersRepository.GetAllSuppliers();
-            model.SupplierList.AddRange(suppliers);
+            var model = await RefreshSuppliers();
             return View("Suppliers", model);
         }
     }

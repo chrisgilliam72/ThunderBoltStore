@@ -47,7 +47,7 @@ namespace ThunderBoltStore.Controllers
             var model = await RefreshOrders();
             if (canceled)
             {
-                model.LastOperation = OrderOperation.Cancel;
+                model.LastOperation = "Order canceled";
                 model.ShowOperationSuccessful = true;
             }
 
@@ -73,7 +73,7 @@ namespace ThunderBoltStore.Controllers
             var model = await RefreshOrders();
             if (shipped)
             {
-                model.LastOperation = OrderOperation.Ship ;
+                model.LastOperation = "Order marked as shipped";
                 model.ShowOperationSuccessful = true;
             }
 

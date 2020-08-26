@@ -7,16 +7,11 @@
 
                 @if (Model.ShowOperationSuccessful)
                 {
-                    if (Model.LastOperation == OrderOperation.Ship)
-                    {
-                        @await Html.PartialAsync("/Views/Shared/_ToastMessage.cshtml", new ToastMessage("Success", "Order marked as shipped"));
-                    }
-                    else if (Model.LastOperation == OrderOperation.Cancel)
-                    {
-                        @await Html.PartialAsync("/Views/Shared/_ToastMessage.cshtml", new ToastMessage("Success", "Order canceled"));
-                    }
+                    @await Html.PartialAsync("/Views/Shared/_ToastMessage.cshtml", new ToastMessage("Success", Model.LastOperation));
                     <br />
+
                 }
+
                 else if (Model.ShowOperationFail)
                 {
                     @await Html.PartialAsync("/Views/Shared/_ToastMessage.cshtml", new ToastMessage("Fail", "Oops something went wrong") { IsError = true });
@@ -86,7 +81,7 @@
                                             </button>
                                         </div>
                                         <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
-                                            Are you sure you want to ship this order now?
+                                            Are you sure you want to ship order no @Model.OrderList[i].OrderID ?
                                         </div>
                                         <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
                                             <button type="button" class="btn-dark btn-sm  button-cancel" data-dismiss="modal">CANCEL</button>

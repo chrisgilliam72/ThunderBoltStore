@@ -7,7 +7,7 @@ using ThunderBoltStore.Models;
 
 namespace ThunderBoltStore.ViewModels
 {
-    public class SuppliersList : Controller
+    public class SuppliersList : OperationalListBase
     {
         public List<Supplier> SupplierList { get; set; }
 

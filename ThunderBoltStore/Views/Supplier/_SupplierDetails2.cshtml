@@ -1,0 +1,99 @@
+﻿@model Supplier 
+@{ 
+
+    var updateBtnID = "btnEditSupplier" + Model.DisplayIndex;
+    var modalUpdateID = "modalUpdate" + Model.DisplayIndex;
+    var frmUpdateID = "frmUpdate" + Model.DisplayIndex;
+}
+<form id="@frmUpdateID" da data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divTableSuppliers" asp-action="SaveSupplier" asp-controller="Supplier" role="form" data-ajax-method="post">
+
+    <div class="modal fade" id="@modalUpdateID">
+        <div class="modal-dialog modal-dialog-centered" role="dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                    <h6 class="modal-title" id="exampleModalLabel">   <i class="fas fa-box">&nbsp;</i>@Model.Name details</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="background-image: linear-gradient(to bottom, #4B79A1, #283E51);">
+                    @Html.HiddenFor(x => x.SupplierID)
+                    @Html.HiddenFor(x => x.IsActive)
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.HomePage, "Home Page")
+                                @Html.TextBoxFor(x =>Model.HomePage, new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.HomePage, "", new { @Class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ContactName, "Contact Name")
+                                @Html.TextBoxFor(x => x.ContactName, new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ContactName, "", new { @Class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.Address)
+                                @Html.TextBoxFor(x => x.Address, new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.Address, "", new { @Class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.PostalCode)
+                                @Html.TextBoxFor(x => x.PostalCode, new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.PostalCode, "", new { @Class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.Region)
+                                @Html.TextBoxFor(x => x.Region, new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.Region, "", new { @Class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.Name, "Supplier Name")
+                                @Html.TextBoxFor(x => x.Name, new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.Name, "", new { @Class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.Phone, "Contact Number")
+                                @Html.TextBoxFor(x => x.Phone, new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.Phone, "", new { @Class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ContactTitle, "Contact Title")
+
+                                @Html.DropDownListFor(x => x.ContactTitle, new List<SelectListItem>
+                                    {
+                                    new SelectListItem {Text="Mr", Value="Mr"},
+                                    new SelectListItem { Text = "Mrs", Value = "Mrs" },
+                                    new SelectListItem { Text = "Miss", Value = "Miss" },
+                                    new SelectListItem { Text = "Dr", Value = "Dr" },
+                                    new SelectListItem { Text = "Professor", Value = "Professor" },
+                                    },
+                                    new { @Class = "form-control" }
+                                )
+                                @Html.ValidationMessageFor(x => x.ContactTitle, "", new { @Class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.City, "Town or City")
+                                @Html.TextBoxFor(x => x.City, new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.City, "", new { @Class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.Country)
+                                @Html.TextBoxFor(x => x.Country, new { @Class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.Country, "", new { @Class = "text-danger" })
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer bg-modal-footer" style="background-image: linear-gradient(to bottom,#ffd89b, #19547b);">
+                    <button id="@updateBtnID" type="submit" class="btn-sm btn-dark">
+                        <i class="far fa-save"></i> Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
